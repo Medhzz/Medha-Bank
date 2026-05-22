@@ -1,0 +1,46 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_BANK_ID: ${{ secrets.VITE_BANK_ID }}
+          VITE_BANK_NAME: ${{ secrets.VITE_BANK_NAME }}
+          VITE_IFSC_CODE: ${{ secrets.VITE_IFSC_CODE }}
+          VITE_PRIVATE_API_KEY: ${{ secrets.VITE_PRIVATE_API_KEY }}
+          VITE_PRIVATE_AUTH_DOMAIN: ${{ secrets.VITE_PRIVATE_AUTH_DOMAIN }}
+          VITE_PRIVATE_PROJECT_ID: ${{ secrets.VITE_PRIVATE_PROJECT_ID }}
+          VITE_PRIVATE_STORAGE_BUCKET: ${{ secrets.VITE_PRIVATE_STORAGE_BUCKET }}
+          VITE_PRIVATE_MESSAGING_SENDER_ID: ${{ secrets.VITE_PRIVATE_MESSAGING_SENDER_ID }}
+          VITE_PRIVATE_APP_ID: ${{ secrets.VITE_PRIVATE_APP_ID }}
+          VITE_HUB_API_KEY: ${{ secrets.VITE_HUB_API_KEY }}
+          VITE_HUB_AUTH_DOMAIN: ${{ secrets.VITE_HUB_AUTH_DOMAIN }}
+          VITE_HUB_PROJECT_ID: ${{ secrets.VITE_HUB_PROJECT_ID }}
+          VITE_HUB_STORAGE_BUCKET: ${{ secrets.VITE_HUB_STORAGE_BUCKET }}
+          VITE_HUB_MESSAGING_SENDER_ID: ${{ secrets.VITE_HUB_MESSAGING_SENDER_ID }}
+          VITE_HUB_APP_ID: ${{ secrets.VITE_HUB_APP_ID }}
+          VITE_HUB_BANK_EMAIL: ${{ secrets.VITE_HUB_BANK_EMAIL }}
+          VITE_HUB_BANK_PASSWORD: ${{ secrets.VITE_HUB_BANK_PASSWORD }}
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
